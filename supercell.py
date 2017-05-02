@@ -155,10 +155,11 @@ def main():
         progress(i/nFrames)
         #iterate over the three dimensions
         for dim in range(0,3):
-            #iterate over all atoms
-            for atomVec in frame[2:]:
-                #iterate over the unitcells we need to add in this dimension
-                for cellN in range(1,superCell[dim]):
+            nAtoms = len(frame)
+            #iterate over the unitcells we need to add in this dimension
+            for cellN in range(1,superCell[dim]):
+                #iterate over all atoms
+                for atomVec in frame[2:nAtoms]:
                     tmpVec = atomVec[1:]
                     tmpVec[dim] += cellN
                     frame.append([atomVec[0]] + tmpVec)
