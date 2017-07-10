@@ -11,15 +11,15 @@ def convertNames(inFile, outFile):
                 continue
             name = split[0]
             split[1:] = [float(x) for x in split[1:]]
-            if name[0] == 'c' or name[0] == 'C':
+            if name[0].lower() == 'c':
                 split[0] = 'C'
-            elif name[0] == 'o':
+            elif name[0].lower() == 'o':
                 split[0] = 'O'
-            elif name[0] == 'h':
+            elif name[0].lower() == 'h':
                 split[0] = 'H'
-            elif name[0:1] == 'ni':
+            elif name[0:2].lower() == 'ni':
                 split[0] = 'Ni'
-            elif name[0] == 'n':
+            elif name[0].lower() == 'n':
                 split[0] = 'N'
             xyz.write(("{:10} "+"{:20.6f} "*3+"\n").format(*split))
     xyz.close()
@@ -166,7 +166,7 @@ def getPBCVector(staticVec, vec, box, cut=5.0):
     
     
 
-def getBondValues(inMol,bondLists):
+def getBondValues(inMol,bondLists, cut=5.0):
     if not isinstance(inMol, list):
         mols = [ inMol ]
     else:
@@ -179,10 +179,10 @@ def getBondValues(inMol,bondLists):
         for name, bondList in bondLists.items():
             for item in bondList:
                 l = bond(molecule[item[0]].position,molecule[item[1]].position)
-                if l > 5.0 and molecule.get_pbc().all():
-                    tmpVec = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell())
+                if l > cut and molecule.get_pbc().all():
+                    tmpVec = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell(),cut=cut)
                     l = np.linalg.norm(tmpVec)
-                elif l > 5.0:
+                elif l > cut:
                     skip += 1
                     continue
                 bonds[name].append(l)
@@ -190,7 +190,7 @@ def getBondValues(inMol,bondLists):
         print("Out of bond limit: "+str(skip))
     return bonds
 
-def getAngleValues(inMol,angleLists):
+def getAngleValues(inMol,angleLists, cut=5.0):
     if not isinstance(inMol, list):
         mols = [ inMol ]
     else:
@@ -204,11 +204,11 @@ def getAngleValues(inMol,angleLists):
             for item in angleList:
                 vec1 = np.subtract(molecule[item[0]].position,molecule[item[1]].position)
                 vec2 = np.subtract(molecule[item[2]].position,molecule[item[1]].position)
-                if np.linalg.norm(vec1) > 5.0 and molecule.get_pbc().all():
+                if np.linalg.norm(vec1) > cut and molecule.get_pbc().all():
                     vec1 = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell())
-                if np.linalg.norm(vec2) > 5.0 and molecule.get_pbc().all():
+                if np.linalg.norm(vec2) > cut and molecule.get_pbc().all():
                     vec2 = getPBCVector(molecule[item[2]].position, molecule[item[1]].position, molecule.get_cell())
-                if (np.linalg.norm(vec1) > 5.0 or np.linalg.norm(vec2) > 5.0) and not molecule.get_pbc().all():
+                if (np.linalg.norm(vec1) > cut or np.linalg.norm(vec2) > cut) and not molecule.get_pbc().all():
                     skip += 1
                     continue
                 angles[name].append(angle(vec1,vec2))
@@ -217,7 +217,7 @@ def getAngleValues(inMol,angleLists):
     return angles
 
 
-def getDihedralValues(inMol, dihedralLists):
+def getDihedralValues(inMol, dihedralLists, cut=5.0):
     if not isinstance(inMol, list):
         mols = [ inMol ]
     else:
@@ -232,13 +232,13 @@ def getDihedralValues(inMol, dihedralLists):
                 vec1 = np.subtract(molecule[item[0]].position,molecule[item[1]].position)
                 vec2 = np.subtract(molecule[item[1]].position,molecule[item[2]].position)
                 vec3 = np.subtract(molecule[item[2]].position,molecule[item[3]].position)
-                if np.linalg.norm(vec1) > 5.0 and molecule.get_pbc().all():
+                if np.linalg.norm(vec1) > cut and molecule.get_pbc().all():
                     vec1 = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell())
-                if np.linalg.norm(vec2) > 5.0 and molecule.get_pbc().all():
+                if np.linalg.norm(vec2) > cut and molecule.get_pbc().all():
                     vec2 = getPBCVector(molecule[item[1]].position, molecule[item[2]].position, molecule.get_cell())
-                if np.linalg.norm(vec3) > 5.0 and molecule.get_pbc().all():
+                if np.linalg.norm(vec3) > cut and molecule.get_pbc().all():
                     vec3 = getPBCVector(molecule[item[2]].position, molecule[item[3]].position, molecule.get_cell())
-                if (np.linalg.norm(vec1) > 5.0 or np.linalg.norm(vec2) > 5.0 or np.linalg.norm(vec3) > 5.0) and not molecule.get_pbc().all():
+                if (np.linalg.norm(vec1) > cut or np.linalg.norm(vec2) > cut or np.linalg.norm(vec3) > cut) and not molecule.get_pbc().all():
                     skip += 1
                     continue
                 dihedrals[name].append(dihedral(vec1,vec2,vec3))
