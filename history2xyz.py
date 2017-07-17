@@ -43,7 +43,7 @@ def convertHistory2XYZ(inFile, outFile, atomNames):
         print('levcfg: '+str(levcfg))
         print('imcon: '+str(imcon))
         print('nAtoms: '+str(nAtoms))
-        print('Line: 0...', end='\r')
+        print('Frame: 0...', end='\r')
         nItems = (levcfg+1)*3
         if imcon == 6:
             latticeBool = 'pbc="T T F"'
@@ -55,10 +55,13 @@ def convertHistory2XYZ(inFile, outFile, atomNames):
         elif levcfg == 2:
             properties = 'Properties=species:S:1:pos:R:3:vel:R:3:forces:R:3 '
         iLine = 0
+        iFrame = 0
         for line in r:
             split = line.split()
             if split[0].lower() == 'timestep':
                 bunch.append(str(nAtoms)+'\n')
+                iFrame += 1
+                print('Frame: '+str(iFrame)+'...', end='\r')
                 tmp = []
                 #timestep value
                 #tmp.append(split[0])
@@ -81,7 +84,6 @@ def convertHistory2XYZ(inFile, outFile, atomNames):
             if len(bunch) == bunchsize:
                 w.writelines(bunch)
                 iLine += bunchsize
-                print('Line: '+str(iLine)+'...', end='\r')
                 bunch = []
         w.writelines(bunch)
             
