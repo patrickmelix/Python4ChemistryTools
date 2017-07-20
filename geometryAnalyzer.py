@@ -133,12 +133,13 @@ def dihedral(vec1,vec2,vec3):
     return angle(v1v2,v2v3)
 
 def getPBCVector(staticVec, vec, box, cut=5.0):
-    #find new pbcVec using PBC so that staticVec-pbcVec is less then 5A away
+    #find new pbcVec using PBC so that pbcVec-staticVec is less then 5A away
     #test 6 most propable directions first
-    pbcVec = np.subtract(staticVec,vec)
+    pbcVec = np.subtract(vec,staticVec)
     for i in range(0,3):
         for j in [-1,1]:
-            newVec = np.add(pbcVec,box[i]*j)
+            newVec = np.add(vec,box[i]*j)
+            newVec = np.subtract(newVec,staticVec)
             if np.linalg.norm(newVec) < cut:
                 return newVec
     #if not yet exited, perhaps it is one of the boxes on the edges
@@ -149,7 +150,8 @@ def getPBCVector(staticVec, vec, box, cut=5.0):
         for i in [-1,1]:
             for j in [-1,1]:
                 translate = np.add(box[dims[0]]*i,box[dims[1]]*j)
-                newVec = np.add(pbcVec,translate)
+                newVec = np.add(vec,translate)
+                newVec = np.subtract(newVec,staticVec)
                 if np.linalg.norm(newVec) < cut:
                     return newVec
     #check the corner-connected boxes
@@ -158,7 +160,8 @@ def getPBCVector(staticVec, vec, box, cut=5.0):
             for k in [-1,1]:
                 translate = np.add(box[0]*i,box[1]*j)
                 translate = np.add(translate,box[2]*k)
-                newVec = np.add(pbcVec,translate)
+                newVec = np.add(vec,translate)
+                newVec = np.subtract(newVec,staticVec)
                 if np.linalg.norm(newVec) < cut:
                     return newVec
     #if there is no result yet something is wrong
