@@ -25,7 +25,9 @@ def main():
     atomNames['n1'] = 'N'
     atomNames['ns'] = 'N'
     atomNames['ni'] = 'Ni'
+    atomNames['cu'] = 'Cu'
     atomNames['h1'] = 'H'
+    atomNames['ha'] = 'H'
     atomNames['ho'] = 'H'
     atomNames['hn'] = 'H'
     convertHistory2XYZ('HISTORY','traj.xyz',atomNames)
@@ -35,7 +37,7 @@ def convertHistory2XYZ(inFile, outFile, atomNames):
     bunchsize = 1000000     # Experiment with different sizes 1000000
     bunch = []
     print('Processing...')
-    with open(inFile, "r") as r, open(outFile, "w") as w:
+    with open(inFile, "r", bunchsize) as r, open(outFile, "w", bunchsize) as w:
         #skip header line
         next(r)
         line = r.readline().strip().split()
