@@ -208,9 +208,9 @@ def getAngleValues(inMol,angleLists, cut=5.0):
                 vec1 = np.subtract(molecule[item[0]].position,molecule[item[1]].position)
                 vec2 = np.subtract(molecule[item[2]].position,molecule[item[1]].position)
                 if np.linalg.norm(vec1) > cut and molecule.get_pbc().all():
-                    vec1 = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell())
+                    vec1 = getPBCVector(molecule[item[1]].position, molecule[item[0]].position, molecule.get_cell())
                 if np.linalg.norm(vec2) > cut and molecule.get_pbc().all():
-                    vec2 = getPBCVector(molecule[item[2]].position, molecule[item[1]].position, molecule.get_cell())
+                    vec2 = getPBCVector(molecule[item[1]].position, molecule[item[2]].position, molecule.get_cell())
                 if (np.linalg.norm(vec1) > cut or np.linalg.norm(vec2) > cut) and not molecule.get_pbc().all():
                     skip += 1
                     continue
@@ -232,9 +232,9 @@ def getDihedralValues(inMol, dihedralLists, cut=5.0):
         for name, dihedralList in dihedralLists.items():
             skip = 0
             for item in dihedralList:
-                vec1 = np.subtract(molecule[item[0]].position,molecule[item[1]].position)
-                vec2 = np.subtract(molecule[item[1]].position,molecule[item[2]].position)
-                vec3 = np.subtract(molecule[item[2]].position,molecule[item[3]].position)
+                vec1 = np.subtract(molecule[item[1]].position,molecule[item[0]].position)
+                vec2 = np.subtract(molecule[item[2]].position,molecule[item[1]].position)
+                vec3 = np.subtract(molecule[item[3]].position,molecule[item[2]].position)
                 if np.linalg.norm(vec1) > cut and molecule.get_pbc().all():
                     vec1 = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell())
                 if np.linalg.norm(vec2) > cut and molecule.get_pbc().all():
