@@ -9,6 +9,7 @@
 
 import sys, os
 import numpy as np
+from ase import io, Atoms
 
 #variables
 global vecIn
@@ -44,7 +45,7 @@ def main():
     
     #otherwise something is wrong
     else:
-        print('You gave some arguments, but the number of them is wrong. Please provide "<InputFile> <a1> <a2> <a3> <b1> <b2> <b3> <c1> <c2> <c3>"')
+        print('You gave some arguments, but the number of them is wrong. Please provide "<InputFile> <OutFile> <a1> <a2> <a3> <b1> <b2> <b3> <c1> <c2> <c3> <n1> <n2> <n3>"')
         sys.exit(1)
 
     #check input
@@ -55,131 +56,52 @@ def main():
     matrixIn = np.asmatrix(vecIn, dtype='float')
 
     #open files
-    inFile, outFile = openFiles(trajFileIn, trajFileOut)
+    inMol = io.read(trajFileIn,index=slice(0,None))
+    
+    #if output exists mv to .bak
+    if os.path.isfile(trajFileOut):
+        print('ATTENTION: Output file exists, moving to *.bak')
+        os.rename(trajFileOut, trajFileOut+'.bak')
 
-    #calculate the inverse
+    #open output for writing
+    outFile = open(trajFileOut, 'w')
+
+    #set cell
+    for mol in inMol:
+        mol.set_cell(matrixIn)
+
+    #convert input superCell to integer tuple
     try:
-        matrixInv = np.linalg.inv(matrixIn)
-    except:
-        print('Cannot calculate the inverse of your unit cell matrix, maybe you misstyped?')
-        sys.exit(1)
-
-    #iterate over frames and save info as fractional coords
-    finished = False
-    atomVec = []
-    frames = [] #save all atoms of this frame in fractional coords
-    lineN = 0
-    #get number of lines
-    nLines = rawpycount(trajFileIn)
-    print('Number of lines in trajectory: '+str(nLines))
-    print('Reading input trajectory and converting to fractional coordinates:')
-    while not finished:
-        #read first line of input
-        nAtoms = inFile.readline().strip()
-        #if is empty last frame has been processed
-        if nAtoms == '':
-            print('EOF reached.')
-            finished = True
-            break
-        else:
-            nAtoms = int(nAtoms)
-        #line of last line to be read
-        lineN += nAtoms+2
-
-        #update progress bar
-        progress(lineN/nLines)
-
-        #does the file end before that line?
-        if lineN > nLines:
-            print('ERROR: Input file ends earlier than expected!')
-            sys.exit(1)
-
-        #read comment line
-        comment = inFile.readline().rstrip('\n')
-
-        thisFrame = []
-        thisFrame.append(nAtoms)
-        thisFrame.append(comment)
-        for iAtom in range(0, nAtoms):
-            line = inFile.readline().split()
-            atomVec = np.array(line[1:], dtype='float')
-            element = line[0]
-            atomVec = np.dot(matrixInv, atomVec).tolist()[0]
-
-            #check if fractional coords are between 0 and 1
-            #disabled since unit cell wrapping is not obligatory
-            #if any(x > 1.0 for x in atomVec) or any(x < 0.0 for x in atomVec):
-            #    print('ERROR: Your cell vectors do not cover all coordinates (at least one atom is outside your unit cell)')
-            #    print(len(frames))
-            #    print(element)
-            #    print(atomVec)
-            #    sys.exit(1)
-            thisFrame.append([element] + atomVec)
-       
-        #add this frame to all frames
-        frames.append(thisFrame)
-
-        #update progress bar
-        progress(lineN/nLines)
-
-        #eof reached?
-        if lineN is nLines:
-            print('EOF reached.')
-            finished = True
-
-    #convert input superCell to integer vector
-    try:
-        superCell = [int(x) for x in superCell]
+        superCell = tuple([int(x) for x in superCell])
     except:
         print('ERROR: SuperCell Vector contains non-integer values!')
         sys.exit(1)
 
     #check input superCell vector
     if any(x for x in superCell) < 1:
-        print('ERROR: SuperCell Vector contains values smaller than 1!')
+        print('ERROR: SuperCell Tuple contains values smaller than 1!')
         sys.exit(1)
     
-    #convert to numpy array
-    superCell = np.array(superCell)
-
     #calculate number of unit cells
-    superCellSize = np.prod(superCell, dtype='int')
+    superCellSize = np.prod(np.array(superCell), dtype='int')
     print('You will end up with '+str(superCellSize)+' unit cells in each frame.')
 
     #iterate over frames
-    nFrames = len(frames)
+    nFrames = len(inMol)
     i = 0
     print('Adding Coordinates:')
-    for frame in frames:
+    for frame in inMol:
         i += 1
         progress(i/nFrames)
-        #iterate over the three dimensions
-        for dim in range(0,3):
-            nAtoms = len(frame)
-            #iterate over the unitcells we need to add in this dimension
-            for cellN in range(1,superCell[dim]):
-                #iterate over all atoms
-                for atomVec in frame[2:nAtoms]:
-                    tmpVec = atomVec[1:]
-                    tmpVec[dim] += cellN
-                    frame.append([atomVec[0]] + tmpVec)
+        frame *= superCell
     
-    #now all frames should have all fractional coords
-    #convert the fractional coord to real space
-    print('Converting to real space and writing to file:')
+    print('Writing to file:')
     i = 0
-    for frame in frames:
+    for frame in inMol:
         i += 1
         progress(i/nFrames)
-        nAtoms = len(frame)-2
-        outFile.write(str(nAtoms)+'\n')
-        outFile.write(str(frame[1])+'\n')
-        for atomVec in frame[2:]:
-            atomVec = [atomVec[0]] + np.dot(matrixIn, atomVec[1:]).tolist()[0]
-            string = '   '.join(str(e) for e in atomVec)
-            outFile.write(string+'\n')
+        io.extxyz.write_xyz(outFile,frame)
 
-    inFile.close()
     outFile.close()
 
 
@@ -230,20 +152,6 @@ def checkInput(fileIn, vec):
         sys.exit(1)
 
 
-#open input and output file
-def openFiles(fileIn, fileOut):
-    #if output exists mv to .bak
-    if os.path.isfile(fileOut):
-        print('ATTENTION: Output file exists, moving to *.bak')
-        os.rename(fileOut, fileOut+'.bak')
-
-    #open input for reading
-    inFile = open(fileIn, 'r')
-
-    #open output for writing
-    outFile = open(fileOut, 'w')
-
-    return inFile, outFile
 
 #fast way of getting number of lines
 def _make_gen(reader):
