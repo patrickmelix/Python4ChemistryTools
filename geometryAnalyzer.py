@@ -39,7 +39,10 @@ def getBonds(A,B,inMol,bondList):
             if molecule[i].symbol == A:
                 allIdx.append(i)
         for iIdx in allIdx:
-            ibonds = bondList[str(iIdx)]
+            try:
+                ibonds = bondList[str(iIdx)]
+            except:
+                continue
             for bonded in ibonds:
                 if not molecule[bonded].symbol == B:
                     continue
@@ -66,7 +69,10 @@ def getAngles(A,B,C,inMol,bondList):
             if molecule[i].symbol == A:
                 allIdx.append(i)
         for iIdx in allIdx:
-            bonds = bondList[str(iIdx)]
+            try:
+                bonds = bondList[str(iIdx)]
+            except:
+                continue
             for bonded in bonds:
                 if not molecule[bonded].symbol == B:
                     continue
@@ -92,6 +98,10 @@ def getDihedrals(A,B,C,D,molecule,bondList):
         if molecule[i].symbol == A:
             allIdx.append(i)
     for idx in allIdx:#A
+        try:
+            ibonds = bondList[str(idx)]
+        except:
+            continue
         for j in bondList[str(idx)]:
             if not molecule[j].symbol == B:
                 continue
@@ -169,7 +179,7 @@ def getPBCVector(staticVec, vec, box, cut=5.0):
     
     
 
-def getBondValues(inMol,bondLists, cut=5.0):
+def getBondValues(inMol,bondLists):
     if not isinstance(inMol, list):
         mols = [ inMol ]
     else:
@@ -177,23 +187,13 @@ def getBondValues(inMol,bondLists, cut=5.0):
     bonds = {}
     for name in bondLists:
         bonds[name] = []
-    skip = 0
     for molecule in mols:
         for name, bondList in bondLists.items():
             for item in bondList:
-                l = bond(molecule[item[0]].position,molecule[item[1]].position)
-                if l > cut and molecule.get_pbc().all():
-                    tmpVec = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell(),cut=cut)
-                    l = np.linalg.norm(tmpVec)
-                elif l > cut:
-                    skip += 1
-                    continue
-                bonds[name].append(l)
-    if not skip == 0:
-        print("Out of bond limit: "+str(skip))
+                bonds[name].append(molecule.get_distance(item[0],item[1],mic=True))
     return bonds
 
-def getAngleValues(inMol,angleLists, cut=5.0):
+def getAngleValues(inMol,angleLists):
     if not isinstance(inMol, list):
         mols = [ inMol ]
     else:
@@ -201,26 +201,14 @@ def getAngleValues(inMol,angleLists, cut=5.0):
     angles = {}
     for name in angleLists:
         angles[name] = []
-    skip = 0
     for molecule in mols:
         for name, angleList in angleLists.items():
             for item in angleList:
-                vec1 = np.subtract(molecule[item[0]].position,molecule[item[1]].position)
-                vec2 = np.subtract(molecule[item[2]].position,molecule[item[1]].position)
-                if np.linalg.norm(vec1) > cut and molecule.get_pbc().all():
-                    vec1 = getPBCVector(molecule[item[1]].position, molecule[item[0]].position, molecule.get_cell())
-                if np.linalg.norm(vec2) > cut and molecule.get_pbc().all():
-                    vec2 = getPBCVector(molecule[item[1]].position, molecule[item[2]].position, molecule.get_cell())
-                if (np.linalg.norm(vec1) > cut or np.linalg.norm(vec2) > cut) and not molecule.get_pbc().all():
-                    skip += 1
-                    continue
-                angles[name].append(angle(vec1,vec2))
-    if not skip == 0:
-        print("Out of bond limit: "+str(skip))
+                angles[name].append(molecule.get_angle(item[0],item[1],item[2],mic=True))
     return angles
 
 
-def getDihedralValues(inMol, dihedralLists, cut=5.0):
+def getDihedralValues(inMol, dihedralLists):
     if not isinstance(inMol, list):
         mols = [ inMol ]
     else:
@@ -230,22 +218,7 @@ def getDihedralValues(inMol, dihedralLists, cut=5.0):
         dihedrals[name] = []
     for molecule in mols:
         for name, dihedralList in dihedralLists.items():
-            skip = 0
             for item in dihedralList:
-                vec1 = np.subtract(molecule[item[1]].position,molecule[item[0]].position)
-                vec2 = np.subtract(molecule[item[2]].position,molecule[item[1]].position)
-                vec3 = np.subtract(molecule[item[3]].position,molecule[item[2]].position)
-                if np.linalg.norm(vec1) > cut and molecule.get_pbc().all():
-                    vec1 = getPBCVector(molecule[item[0]].position, molecule[item[1]].position, molecule.get_cell())
-                if np.linalg.norm(vec2) > cut and molecule.get_pbc().all():
-                    vec2 = getPBCVector(molecule[item[1]].position, molecule[item[2]].position, molecule.get_cell())
-                if np.linalg.norm(vec3) > cut and molecule.get_pbc().all():
-                    vec3 = getPBCVector(molecule[item[2]].position, molecule[item[3]].position, molecule.get_cell())
-                if (np.linalg.norm(vec1) > cut or np.linalg.norm(vec2) > cut or np.linalg.norm(vec3) > cut) and not molecule.get_pbc().all():
-                    skip += 1
-                    continue
-                dihedrals[name].append(dihedral(vec1,vec2,vec3))
-    if not skip == 0:
-        print("Out of bond limit: "+str(skip))
+                dihedrals[name].append(molecule.get_dihedral(item[0],item[1],item[2],item[3],mic=True))
     return dihedrals
 
