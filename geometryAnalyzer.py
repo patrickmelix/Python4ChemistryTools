@@ -176,8 +176,8 @@ def getPBCVector(staticVec, vec, box, cut=5.0):
                     return newVec
     #if there is no result yet something is wrong
     raise ValueError("No matching PBC point found!")
-    
-    
+
+
 
 def getBondValues(inMol,bondLists):
     if not isinstance(inMol, list):
@@ -222,3 +222,30 @@ def getDihedralValues(inMol, dihedralLists):
                 dihedrals[name].append(molecule.get_dihedral(item[0],item[1],item[2],item[3],mic=True))
     return dihedrals
 
+def get_distance2plane(inMol,idxP1,idxP2,idxP3,idxDist):
+    if not isinstance(inMol, list):
+        mols = [ inMol ]
+    else:
+        mols = inMol
+    dists = []
+    for mol in mols:
+        molecule = mol.copy()
+        toCenter = -1.0 * molecule[idxP1].position
+        molecule.translate(toCenter)
+        print(molecule[idxP1])
+        print(molecule[idxP2])
+        print(molecule[idxP3])
+        toXAxis = molecule[idxP2].position
+        molecule.rotate(toXAxis,'x',rotate_cell=True)
+        print(molecule[idxP1])
+        print(molecule[idxP2])
+        print(molecule[idxP3])
+        toXYPlane = molecule[idxP3].position[:]
+        toXYPlane[0] = 0
+        molecule.rotate(toXYPlane,'y')
+        print(molecule[idxP1])
+        print(molecule[idxP2])
+        print(molecule[idxP3])
+        print(molecule[idxDist])
+        dists.append(abs(molecule[idxDist].position[-1]))
+    return dists
