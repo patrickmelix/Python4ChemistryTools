@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# Script to convert ASE readable structure to ADF readable xyz format
+# Script to convert DFTB+ MD output to ASE ext-xyz trajectory
 # by Patrick Melix
 # 2018/02/13
 #
