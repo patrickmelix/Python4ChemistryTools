@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# Script to convert VASP output to ASE-extxyz trajectory
+# Script to convert VASP output or XDATCAR to ASE-extxyz trajectory
 # by Patrick Melix
 # 2018/03/13
 #
@@ -17,7 +17,11 @@ def main(inFile,outFile):
         print('ATTENTION: {:} exists, moving to *.bak'.format(outFile))
         os.rename(outFile, outFile+'.bak')
 
-    mol = io.read(inFile, format='vasp-out', index=slice(0,None))
+    if "xdatcar" in inFile.lower():
+        mol = io.read(inFile, format='vasp-xdatcar', index=slice(0,None))
+    else:
+        mol = io.read(inFile, format='vasp-out', index=slice(0,None))
+
     for frame in mol:
         frame.wrap(center=(0.0,0.0,0.0))
         frame.write(outFile,append=True)
