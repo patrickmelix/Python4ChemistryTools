@@ -8,23 +8,25 @@
 from ase import io
 import os
 
-def main(inFile,outFile):
-    if not os.path.isfile(inFile):
-        raise ValueError('File {:} does not exist'.format(str(inFile)))
-
+def main(outFile, inFiles):
     #if output exists mv to .bak
     if os.path.isfile(outFile):
         print('ATTENTION: {:} exists, moving to *.bak'.format(outFile))
         os.rename(outFile, outFile+'.bak')
 
-    if "xdatcar" in inFile.lower():
-        mol = io.read(inFile, format='vasp-xdatcar', index=slice(0,None))
-    else:
-        mol = io.read(inFile, format='vasp-out', index=slice(0,None))
+    for inFile in inFiles:
+        if not os.path.isfile(inFile):
+            raise ValueError('File {:} does not exist'.format(str(inFile)))
 
-    for frame in mol:
-        frame.wrap(center=(0.0,0.0,0.0))
-        frame.write(outFile,append=True)
+
+        if "xdatcar" in inFile.lower():
+            mol = io.read(inFile, format='vasp-xdatcar', index=slice(0,None))
+        else:
+            mol = io.read(inFile, format='vasp-out', index=slice(0,None))
+
+        for frame in mol:
+            frame.wrap(center=(0.0,0.0,0.0))
+            frame.write(outFile,append=True)
     return
 
 
@@ -32,9 +34,9 @@ def main(inFile,outFile):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Convert VASP output to ASE-extxyz trajectory')
-    parser.add_argument('input', type=str, help='input xyz file')
     parser.add_argument('output', type=str, help='output file')
+    parser.add_argument('input', type=str, help='input xyz file(s)', nargs='*')
     args = parser.parse_args()
-    main(args.input,args.output)
+    main(args.output, args.input)
 
 
