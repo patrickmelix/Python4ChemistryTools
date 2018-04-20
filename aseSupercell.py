@@ -2,7 +2,7 @@
 #
 # Script to generate a supercell trajectory from an ase trajectory
 # by Patrick Melix
-# 2017/02/20
+# 2018/04/20
 #
 # You can import the module and set the input variables by hand and then call .main() or use the built-in STDInput or command line Arguments
 # Vars to be set: trajFileIn, trajFileOut, superCell[3]
