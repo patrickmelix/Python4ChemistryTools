@@ -167,6 +167,7 @@ config.gridrunner.terminatorADF.special.nodes    = '-x '
 config.gridrunner.terminatorADF.special.cpuspernode    = '-p '
 config.gridrunner.terminatorADF.special.walltime = '-n '
 config.gridrunner.terminatorADF.special.queue    = '-q '
+config.gridrunner.terminatorADF.special.version    = '-v '
 config.gridrunner.terminatorADF.commands.submit  = 'myADF17_pbs'
 config.gridrunner.terminatorADF.commands.check  = 'qstat'
 config.gridrunner.terminatorADF.commands.getid   = __get_jobid
