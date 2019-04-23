@@ -158,7 +158,7 @@ config.gridrunner.slurm.commands.getid   = __get_jobid
 config.gridrunner.slurm.commands.running = __slurm_running
 
 
-#Wrapper around myADF17_pbs submission script
+#Wrapper around adfsubmit submission script
 config.gridrunner.terminatorADF.workdir = '-d'
 config.gridrunner.terminatorADF.output  = '-o'
 config.gridrunner.terminatorADF.error   = '-e'
@@ -168,7 +168,7 @@ config.gridrunner.terminatorADF.special.cpuspernode    = '-p '
 config.gridrunner.terminatorADF.special.walltime = '-n '
 config.gridrunner.terminatorADF.special.queue    = '-q '
 config.gridrunner.terminatorADF.special.version    = '-v '
-config.gridrunner.terminatorADF.commands.submit  = 'myADF17_pbs'
+config.gridrunner.terminatorADF.commands.submit  = 'adfsubmit'
 config.gridrunner.terminatorADF.commands.check  = 'qstat'
 config.gridrunner.terminatorADF.commands.getid   = __get_jobid
 config.gridrunner.terminatorADF.commands.running = __pbs_running
