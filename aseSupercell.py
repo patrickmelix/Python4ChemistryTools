@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Script to generate a supercell trajectory from an ase trajectory
 # by Patrick Melix

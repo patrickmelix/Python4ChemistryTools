@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # creates an ASE xyz file from a cp2k restart file
 import os
 from ase import io

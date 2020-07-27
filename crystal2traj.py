@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Script to convert Crystal GO to ASE-extxyz trajectory
 # by Patrick Melix

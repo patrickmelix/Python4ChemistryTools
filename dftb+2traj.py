@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Script to convert DFTB+ MD output to ASE ext-xyz trajectory
 # by Patrick Melix

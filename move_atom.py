@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # moves a chosen atom from a ase-compatible input around and saves all the coordinate files as xyz
 #

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Script to convert ASE readable structure to ADF readable xyz format
 # by Patrick Melix
