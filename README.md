@@ -9,6 +9,7 @@ My personal Python toolbox for theoretical chemistry.
 - ase2adf.py: Convert any type of ASE readable input file (or files, including asterisk expressions) given as arguments to ADF style XYZ files.
 - dftb+2traj.py: Extract trajectory including periodicity from DFTB+ MD simulation.
 - cp2krestart2xyz: Extract single xyz file from CP2K restart/input files and save them as an ASE ext-xyz file. 
+- cp2k-bsse.py: Analyze output of a CP2K BSSE calculation with two components using PLAMS.
 - crystal2traj.py: Convert Crystal geometry optimization output to a ASE compatible ext-xyz trajectory file.
 - gaussian2traj.py: Convert Gaussian geometry output to ASE compatible ext-xyz trajectory file.
 - vasp2traj.py: Convert VASP geometry optimization output to ASE compatible ext-xyz trajectory file.
