@@ -15,3 +15,4 @@ My personal Python toolbox for theoretical chemistry.
 - vasp2traj.py: Convert VASP geometry optimization output to ASE compatible ext-xyz trajectory file.
 - sumCube.py: Make the sum of an arbitrary number of cube files. Also supports subtraction.
 - moffunctions.py: Some functions for analyzing MOFs, pretty specific to DUT-8.
+- mpl-settings.py: My favorite Matplotlib settings.
