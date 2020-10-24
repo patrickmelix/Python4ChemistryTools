@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Script to convert Crystal GO to ASE-extxyz trajectory
 # by Patrick Melix
@@ -11,11 +11,12 @@ import os, glob
 def main(inStr,outFile):
     #if output exists mv to .bak
     if os.path.isfile(outFile):
-        print('ATTENTION: {:} exists, moving to *.bak'.format(outFile))
+        print('ATTENTION: {:} exists, moving it to {:}.bak'.format(outFile, outFile))
         os.rename(outFile, outFile+'.bak')
 
-    files = glob.glob(os.path.join(inStr,'*'))
+    files = glob.glob(os.path.join(inStr,'./optc*'))
     files.sort()
+    print("Found {} frames.".format(len(files)))
 
     for inFile in files:
         if not os.path.isfile(inFile):
@@ -24,6 +25,7 @@ def main(inStr,outFile):
         print(inFile)
         mol = io.read(inFile, format='crystal')
         mol.write(outFile,append=True)
+    print("Trajectory written to {}.".format(outFile))
     return
 
 

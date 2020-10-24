@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Script to convert Gaussian output to ASE-extxyz trajectory
 # by Patrick Melix
