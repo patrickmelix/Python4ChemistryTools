@@ -125,53 +125,54 @@ def __pbs_running(output):
     return [line.split()[0].split('.')[0] for line in lines]
 
 
-config.gridrunner.pbs.workdir = '-d'
-config.gridrunner.pbs.output  = '-o'
-config.gridrunner.pbs.error   = '-e'
-config.gridrunner.pbs.special.mem    = '-l mem='
+from .jobrunner import GridRunner
+GridRunner.config.pbs.workdir = '-d'
+GridRunner.config.pbs.output  = '-o'
+GridRunner.config.pbs.error   = '-e'
+GridRunner.config.pbs.special.mem    = '-l mem='
 #use .nodes ='<nnodes>:ppn=<cpuspernode>'
-config.gridrunner.pbs.special.nodes    = '-l nodes='
-config.gridrunner.pbs.special.walltime = '-l walltime='
-config.gridrunner.pbs.special.queue    = '-q '
-config.gridrunner.pbs.commands.submit  = 'qsub'
-config.gridrunner.pbs.commands.check  = 'qstat'
-config.gridrunner.pbs.commands.getid   = __get_jobid
-config.gridrunner.pbs.commands.running = __pbs_running
+GridRunner.config.pbs.special.nodes    = '-l nodes='
+GridRunner.config.pbs.special.walltime = '-l walltime='
+GridRunner.config.pbs.special.queue    = '-q '
+GridRunner.config.pbs.commands.submit  = 'qsub'
+GridRunner.config.pbs.commands.check  = 'qstat'
+GridRunner.config.pbs.commands.getid   = __get_jobid
+GridRunner.config.pbs.commands.running = __pbs_running
 
 
-config.gridrunner.slurm.workdir = '-D'
-config.gridrunner.slurm.output  = '-o'
-config.gridrunner.slurm.error   = '-e'
-config.gridrunner.slurm.special.cpuspertask    = '--cpus-per-task='
-config.gridrunner.slurm.special.dependency    = '--dependency='
-config.gridrunner.slurm.special.exclusive    = '--exclusive'
-config.gridrunner.slurm.special.mempercpu    = '--mem-per-cpu='
-config.gridrunner.slurm.special.nodes    = '-N '
-config.gridrunner.slurm.special.ntasks    = '-n '
-config.gridrunner.slurm.special.ntaskspercore    = '--ntasks-per-core='
-config.gridrunner.slurm.special.ntaskspernode    = '--ntasks-per-node='
-config.gridrunner.slurm.special.walltime = '-t '
-config.gridrunner.slurm.special.queue    = '-p '
-config.gridrunner.slurm.commands.submit  = 'sbatch'
-config.gridrunner.slurm.commands.check  = 'squeue'
-config.gridrunner.slurm.commands.getid   = __get_jobid
-config.gridrunner.slurm.commands.running = __slurm_running
+GridRunner.config.slurm.workdir = '-D'
+GridRunner.config.slurm.output  = '-o'
+GridRunner.config.slurm.error   = '-e'
+GridRunner.config.slurm.special.cpuspertask    = '--cpus-per-task='
+GridRunner.config.slurm.special.dependency    = '--dependency='
+GridRunner.config.slurm.special.exclusive    = '--exclusive'
+GridRunner.config.slurm.special.mempercpu    = '--mem-per-cpu='
+GridRunner.config.slurm.special.nodes    = '-N '
+GridRunner.config.slurm.special.ntasks    = '-n '
+GridRunner.config.slurm.special.ntaskspercore    = '--ntasks-per-core='
+GridRunner.config.slurm.special.ntaskspernode    = '--ntasks-per-node='
+GridRunner.config.slurm.special.walltime = '-t '
+GridRunner.config.slurm.special.queue    = '-p '
+GridRunner.config.slurm.commands.submit  = 'sbatch'
+GridRunner.config.slurm.commands.check  = 'squeue'
+GridRunner.config.slurm.commands.getid   = __get_jobid
+GridRunner.config.slurm.commands.running = __slurm_running
 
 
-#Wrapper around myADF17_pbs submission script
-config.gridrunner.terminatorADF.workdir = '-d'
-config.gridrunner.terminatorADF.output  = '-o'
-config.gridrunner.terminatorADF.error   = '-e'
-config.gridrunner.terminatorADF.special.mem    = '-m '
-config.gridrunner.terminatorADF.special.nodes    = '-x '
-config.gridrunner.terminatorADF.special.cpuspernode    = '-p '
-config.gridrunner.terminatorADF.special.walltime = '-n '
-config.gridrunner.terminatorADF.special.queue    = '-q '
-config.gridrunner.terminatorADF.special.version    = '-v '
-config.gridrunner.terminatorADF.commands.submit  = 'myADF17_pbs'
-config.gridrunner.terminatorADF.commands.check  = 'qstat'
-config.gridrunner.terminatorADF.commands.getid   = __get_jobid
-config.gridrunner.terminatorADF.commands.running = __pbs_running
+#Wrapper around myADF19_pbs submission script
+GridRunner.config.terminatorADF.workdir = '-d'
+GridRunner.config.terminatorADF.output  = '-o'
+GridRunner.config.terminatorADF.error   = '-e'
+GridRunner.config.terminatorADF.special.mem    = '-m '
+GridRunner.config.terminatorADF.special.nodes    = '-x '
+GridRunner.config.terminatorADF.special.cpuspernode    = '-p '
+GridRunner.config.terminatorADF.special.walltime = '-n '
+GridRunner.config.terminatorADF.special.queue    = '-q '
+GridRunner.config.terminatorADF.special.version    = '-v '
+GridRunner.config.terminatorADF.commands.submit  = 'myADF19_pbs'
+GridRunner.config.terminatorADF.commands.check  = 'qstat'
+GridRunner.config.terminatorADF.commands.getid   = __get_jobid
+GridRunner.config.terminatorADF.commands.running = __pbs_running
 
 
 #Use these as needed
