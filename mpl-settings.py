@@ -11,6 +11,7 @@ matplotlib.rcParams['figure.figsize'] = (9.75, 5.85) #(10, 6)
 matplotlib.rcParams['figure.dpi'] = 100
 matplotlib.rcParams['savefig.dpi'] = 600
 matplotlib.rcParams['legend.edgecolor'] = 'black'
+matplotlib.rcParams['savefig.facecolor'] = (1.0, 1.0, 1.0, 1.0)#white background
 #matplotlib.ticker.MaxNLocator.default_params['integer'] = True
 
 cm = plt.get_cmap('gnuplot')
