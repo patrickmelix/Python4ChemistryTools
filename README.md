@@ -13,6 +13,7 @@ My personal Python toolbox for theoretical chemistry.
 - crystal2traj.py: Convert Crystal geometry optimization output to a ASE compatible ext-xyz trajectory file.
 - gaussian2traj.py: Convert Gaussian geometry output to ASE compatible ext-xyz trajectory file.
 - vasp2traj.py: Convert VASP geometry optimization output to ASE compatible ext-xyz trajectory file.
+- vasp-check-occupations.py: Assert proper occupations in VASP using ASE.
 - sumCube.py: Make the sum of an arbitrary number of cube files. Also supports subtraction.
 - moffunctions.py: Some functions for analyzing MOFs, pretty specific to DUT-8.
 - mpl-settings.py: My favorite Matplotlib settings.
