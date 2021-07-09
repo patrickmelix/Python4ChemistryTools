@@ -23,6 +23,9 @@ def main(path):
     for s in spins:
         for i in range(nkpoints):
             occ = xml.get_occupation_numbers(i, s)
+            if occ is None:
+                print("No occupations found in vasprun.xml for kpoint #{} and spin {}!".format(i,s))
+                return
             test = np.where(np.logical_or(occ == electrons, occ == 0.0), 1, 0)
             if not test.all():
                 print("Bad Occupation found")
