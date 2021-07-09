@@ -30,7 +30,12 @@ def main(path):
             if not test.all():
                 print("Bad Occupation found")
                 return
-    print("Seems like there are no bad occupations")
+    print("Seems like there are no bad occupations (only last step is checked).")
+
+    if not calc.read_convergence():
+        print("Either SCF or GO did not converge!")
+    else:
+        print("No convergence issues found (only last step).")
     return
 
 
