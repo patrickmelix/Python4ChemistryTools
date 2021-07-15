@@ -18,3 +18,4 @@ My personal Python toolbox for theoretical chemistry.
 - moffunctions.py: Some functions for analyzing MOFs, pretty specific to DUT-8.
 - mpl-settings.py: My favorite Matplotlib settings.
 - dothemath.py: Script to process all math expressions in a text file. Useful for many things, e.g. processing manually written force field definitions.
+- print-traj-cell.py: Prints volume and cell vectors from an ASE compatible trajectory.
