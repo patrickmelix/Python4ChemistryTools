@@ -8,7 +8,7 @@
 from ase import io
 import os
 
-def main(outFile, inFiles):
+def main(outFile, inFiles, wrap):
     #if output exists mv to .bak
     if os.path.isfile(outFile):
         print('ATTENTION: {:} exists, moving to *.bak'.format(outFile))
@@ -25,7 +25,8 @@ def main(outFile, inFiles):
             mol = io.read(inFile, format='vasp-out', index=slice(0,None))
 
         for frame in mol:
-            frame.wrap(center=(0.0,0.0,0.0))
+            if wrap:
+                frame.wrap(center=(0.0,0.0,0.0))
             frame.write(outFile,append=True)
     return
 
@@ -34,9 +35,10 @@ def main(outFile, inFiles):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Convert VASP output to ASE-extxyz trajectory')
+    parser.add_argument('-w', help='Wrap structure with origin as center', action='store_const', default=False, const=True)
     parser.add_argument('output', type=str, help='output file')
     parser.add_argument('input', type=str, help='input xyz file(s)', nargs='*')
     args = parser.parse_args()
-    main(args.output, args.input)
+    main(args.output, args.input, args.w)
 
 
