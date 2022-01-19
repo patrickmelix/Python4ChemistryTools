@@ -8,9 +8,12 @@ from ase.calculators.vasp.vasp import Vasp
 import os
 import numpy as np
 
-def main(path):
-    assert os.path.isdir(path), "Given path is not a directory"
-    calc = Vasp(directory=path)
+
+def check_vasp_occupations(calc):
+    """Check VASP calculations.
+    Returns None if everything is good.
+    Returns a string with a message if a problem occurs.
+    """
     xml = calc._read_xml()
     if xml.get_spin_polarized():
         spins = [0, 1]
@@ -24,13 +27,22 @@ def main(path):
         for i in range(nkpoints):
             occ = xml.get_occupation_numbers(i, s)
             if occ is None:
-                print("No occupations found in vasprun.xml for kpoint #{} and spin {}!".format(i,s))
-                return
+                msg = "No occupations found in vasprun.xml for kpoint" +\
+                      " #{} and spin {}!"
+                return msg.format(i, s)
             test = np.where(np.logical_or(occ == electrons, occ == 0.0), 1, 0)
             if not test.all():
-                print("Bad Occupation found")
-                return
-    print("Seems like there are no bad occupations (only last step is checked).")
+                return "Bad Occupation found"
+
+
+def main(path):
+    assert os.path.isdir(path), "Given path is not a directory"
+    calc = Vasp(directory=path)
+    ret = check_vasp_occupations(calc)
+    if ret:
+        print(ret)
+        return
+    print("Seems like there are no bad occupations (only last step).")
 
     if not calc.read_convergence():
         print("Either SCF or GO did not converge!")
@@ -39,12 +51,14 @@ def main(path):
     return
 
 
-
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description='Check VASP run for proper occupations')
-    parser.add_argument('path', type=str, help='path to VASP files', default='./')
+    parser = argparse.ArgumentParser(
+        description='Check VASP run for proper occupations')
+    parser.add_argument(
+        'path',
+        type=str,
+        help='path to VASP files',
+        default='./')
     args = parser.parse_args()
     main(args.path)
-
-
