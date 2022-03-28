@@ -11,7 +11,6 @@ My personal Python toolbox for theoretical chemistry. Some Bash scripts also sne
 - gaussian2traj.py: Convert Gaussian geometry output to ASE compatible ext-xyz trajectory file.
 - print-traj-cell.py: Prints volume and cell vectors from an ASE compatible trajectory.
 - supercell.py: Generate Supercell from xyz-Trajectory file, can be used as module or standalone.
-- vasp2traj.py: Convert VASP geometry optimization output to ASE compatible ext-xyz trajectory file.
 
 ## Structure Manipulation and Analysis
 - move_atom.py: Move a single atom from an ASE-compatible input around in space and save all resulting coordinates as xyz. Can be used as a script or module.
@@ -24,4 +23,3 @@ My personal Python toolbox for theoretical chemistry. Some Bash scripts also sne
 - mpl-settings.py: My favorite Matplotlib settings.
 - plams_defaults: Options for PLAMS to work on clusters.
 - sumCube.py: Make the sum of an arbitrary number of cube files. Also supports subtraction.
-- vasp-check.py: Assert proper occupations and SCF+GO convergence in VASP using ASE.
