@@ -17,25 +17,27 @@ def main(inList,outFile, subtract=False):
 
     cubeData = []
 
-    for inFile in inList:
+    for iFile,inFile in enumerate(inList):
         if not os.path.isfile(inFile):
             raise ValueError('File {:} does not exist'.format(inFile))
 
         print(inFile)
         with open(inFile) as f:
-            dct = read_cube(f)
-        cubeData.append(dct['data'].copy())
-        atoms = dct['atoms']
-        origin = dct['origin']
+            if iFile == 0: #read first cube
+                baseCube = read_cube(f)
+                atoms = baseCube['atoms']
+                origin = baseCube['origin']
+                continue
+            else: #reduce memory footprint by just keeping one
+                dct = read_cube(f)
 
-    if subtract:
-        sumData = cubeData[0]
-        for i in range(1, len(cubeData)):
-            sumData = np.subtract(sumData, cubeData[i])
-    else:
-        sumData = np.sum(cubeData, axis=0)
+        if subtract:
+            baseCube['data'] -= dct['data']
+        else:
+            baseCube['data'] += dct['data']
+
     with open(outFile,'w') as f:
-        write_cube(f, atoms, data=sumData, origin=origin)
+        write_cube(f, atoms, data=baseCube['data'], origin=origin)
 
     return
 
@@ -45,7 +47,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Sum up cube files')
     parser.add_argument('--subtract', help='Subtract not Sum', action='store_true')
-    parser.add_argument('-file', type=str, nargs='+', default=[], help='optstory dir')
+    parser.add_argument('-file', type=str, nargs='+', default=[], help='input files')
     parser.add_argument('-output', type=str, help='output file')
     args = parser.parse_args()
     main(args.file,args.output, args.subtract)
