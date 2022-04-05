@@ -31,6 +31,8 @@ def main(inList,outFile, subtract=False):
             else: #reduce memory footprint by just keeping one
                 dct = read_cube(f)
 
+        assert baseCube['data'].shape == dct['data'].shape
+
         if subtract:
             baseCube['data'] -= dct['data']
         else:
