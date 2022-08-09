@@ -42,4 +42,4 @@ if __name__ == "__main__":
     parser.add_argument('files', type=str, nargs='+', help='input files')
     parser.add_argument('--volume', help='Devide the Data by the Cell Volume', action='store_true')
     args = parser.parse_args()
-    main(args.files, args.volume)
+    main(args.files, return_value=False, volume=args.volume)
