@@ -23,3 +23,4 @@ My personal Python toolbox for theoretical chemistry. Some Bash scripts also sne
 - mpl-settings.py: My favorite Matplotlib settings.
 - plams_defaults: Options for PLAMS to work on clusters.
 - sumCube.py: Make the sum of an arbitrary number of cube files. Also supports subtraction.
+- print-cell-params.py: Prints the cell parameters of any ASE compatible file.
