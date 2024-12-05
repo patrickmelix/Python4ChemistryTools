@@ -7,9 +7,10 @@
 # You can import the module and set the input variables by hand and then call .main() or use the built-in STDInput or command line Arguments
 # Vars to be set: trajFileIn, trajFileOut, superCell[3]
 
-import sys, os
+import sys
+import os
 import numpy as np
-from ase import io, Atoms
+from ase import io
 
 #variables
 global trajFileIn
@@ -29,11 +30,11 @@ def main():
     global trajFileOut
 
     #get Input from stdin
-    if len(sys.argv) is 1:
+    if len(sys.argv) == 1:
         trajFileIn, trajFileOut, superCell = getSTDInput()
 
     #if we have the right amount of arguments
-    elif len(sys.argv) is 6:
+    elif len(sys.argv) == 6:
         print('Provided information as arguments.')
         trajFileIn, trajFileOut, superCell = getArgumentsInput(sys.argv)
 
@@ -119,7 +120,7 @@ def checkInput(fileIn, superCell):
     #check path
     if not os.path.isfile(fileIn):
         print('ERROR: Input file does not exist?!')
-    if len(superCell) is not 3:
+    if len(superCell) != 3:
         print('ERROR: Length of supercell vector must be three.')
         sys.exit(1)
 
